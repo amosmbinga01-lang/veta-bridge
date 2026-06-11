@@ -9,32 +9,32 @@ $data = json_decode($json_data, true);
 
 if (!empty($data['sender']) && !empty($data['suggestion'])) {
     
-    // HAPA WEKA LINK HALISI YA LILE FAILI LILILO NDANI YA HTDOCS KULE INFINITYFREE:
-    $infinityfree_url = "http://esuggestionboxmanagementportal.free.je/api/receive_suggestion.php";
+    $file = 'suggestions.json';
     
-    // Andaa data ya kutumwa kwa njia ya POST ya kawaida
-    $post_fields = http_build_query([
+    // Soma maoni ya zamani kama yapo
+    $current_data = file_exists($file) ? json_decode(file_get_contents($file), true) : [];
+    
+    // Ongeza maoni mapya
+    $current_data[] = [
         'sender' => $data['sender'],
-        'suggestion' => $data['suggestion']
-    ]);
+        'suggestion' => $data['suggestion'],
+        'time' => date('Y-m-d H:i:s')
+    ];
     
-    // MTAMBO WA CURL: Unapiga bypass ulinzi wa InfinityFree
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $infinityfree_url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36');
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    
-    $response = curl_exec($ch);
-    curl_close($ch);
+    // Save upya kwenye faili
+    file_put_contents($file, json_encode($current_data, JSON_PRETTY_PRINT));
     
     echo json_encode([
-        "status" => "forwarded",
-        "server_response" => $response
+        "status" => "success",
+        "message" => "Maoni yamehifadhiwa salama kwenye Render Storage!"
     ]);
 } else {
-    echo json_encode(["status" => "error", "message" => "No data received"]);
+    // Ukifungua link hii kwenye browser ya kawaida, itakuonyesha maoni yote yaliyosaviwa!
+    $file = 'suggestions.json';
+    if (file_exists($file)) {
+        echo file_get_contents($file);
+    } else {
+        echo json_encode(["status" => "empty", "message" => "No suggestions yet."]);
+    }
 }
 ?>
