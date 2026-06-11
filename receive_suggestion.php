@@ -1,5 +1,5 @@
 <?php
-// receive_suggestion.php (Kwenye Render.com)
+// receive_suggestion.php (Kwenye GitHub / Render.com)
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
@@ -9,8 +9,7 @@ $data = json_decode($json_data, true);
 
 if (!empty($data['sender']) && !empty($data['suggestion'])) {
     
-    // !!! BADILISHA HAPA: Weka link kamili ya faili lako la kupokelea data lililopo kule INFINITYFREE !!!
-    // Mfano: http://esuggestionboxmanagementportal.free.je/api/receive_suggestion.php
+    // HAPA WEKA LINK HALISI YA LILE FAILI LILILO NDANI YA HTDOCS KULE INFINITYFREE:
     $infinityfree_url = "http://esuggestionboxmanagementportal.free.je/api/receive_suggestion.php";
     
     // Andaa data ya kutumwa kwa njia ya POST ya kawaida
@@ -19,7 +18,7 @@ if (!empty($data['sender']) && !empty($data['suggestion'])) {
         'suggestion' => $data['suggestion']
     ]);
     
-    // MTAMBO WA CURL: Unapiga bypass ulinzi wa InfinityFree kwa kubeba kuki bandia au kuigiza kama browser ya ndani
+    // MTAMBO WA CURL: Unapiga bypass ulinzi wa InfinityFree
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $infinityfree_url);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -38,10 +37,4 @@ if (!empty($data['sender']) && !empty($data['suggestion'])) {
 } else {
     echo json_encode(["status" => "error", "message" => "No data received"]);
 }
-?>    }
-} else {
-    echo json_encode(["status" => "error", "message" => "No valid data received"]);
-}
-
-$conn->close();
 ?>
